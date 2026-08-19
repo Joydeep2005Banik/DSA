@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Tirtha — Graphic & UI/UX Designer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400..700&family=Caveat:wght@500;700&family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;1,500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper: #FBF3E7;
+    --paper-dark: #F2E6D3;
+    --ink: #232042;
+    --coral: #FF6B5D;
+    --sun: #FFC857;
+    --mint: #3FBFB5;
+    --grape: #9C87F5;
+    --line: rgba(35,32,66,0.14);
+    --shadow: rgba(35,32,66,0.18);
+    --radius-blob: 255px 15px 225px 15px/15px 225px 15px 255px;
+  }
+
+  *{ box-sizing: border-box; }
+  html{ scroll-behavior: smooth; }
+
+  body{
+    margin:0;
+    background:
+      radial-gradient(circle at 1px 1px, var(--line) 1px, transparent 0) 0 0/26px 26px,
+      var(--paper);
+    color: var(--ink);
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    overflow-x: hidden;
+  }
+
+  h1,h2,h3, .display{
+    font-family: 'Fredoka', sans-serif;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    margin: 0;
+  }
+
+  .hand{
+    font-family: 'Caveat', cursive;
+    font-weight: 700;
+  }
+
+  a { color: inherit; }
+
+  ::selection{ background: var(--sun); color: var(--ink); }
+
+  @media (prefers-reduced-motion: reduce){
+    *{ animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; scroll-behavior: auto !important; }
+  }
+
+  /* ---------- layout shells ---------- */
+  .wrap{ max-width: 1120px; margin: 0 auto; padding: 0 28px; }
+  section{ position: relative; padding: 110px 0; }
+  @media (max-width: 700px){ section{ padding: 72px 0; } }
+
+  .eyebrow{
+    display:inline-flex; align-items:center; gap:8px;
+    font-family:'Caveat', cursive; font-size: 1.35rem; font-weight:700;
+    color: var(--coral);
+    transform: rotate(-2deg);
+  }
+  .eyebrow svg{ width:20px; height:20px; }
+
+  /* ---------- sticky note / tape helpers ---------- */
+  .tape{
+    position:absolute; width:70px; height:26px;
+    background: repeating-linear-gradient(45deg, rgba(255,200,87,0.55), rgba(255,200,87,0.55) 4px, rgba(255,200,87,0.75) 4px, rgba(255,200,87,0.75) 8px);
+    border: 1px solid rgba(35,32,66,0.08);
+    box-shadow: 0 3px 6px rgba(35,32,66,0.12);
+  }
+
+  .card-tilt{ transition: transform .35s cubic-bezier(.2,.9,.3,1.2), box-shadow .35s; }
+  .card-tilt:hover{ transform: translateY(-8px) rotate(0deg) scale(1.02); box-shadow: 0 22px 30px -12px var(--shadow); z-index: 5; }
+
+  /* ---------- nav ---------- */
+  header{
+    position: sticky; top:0; z-index: 50;
+    backdrop-filter: blur(6px);
+    background: rgba(251,243,231,0.82);
+    border-bottom: 1px solid var(--line);
+  }
+  .nav{
+    display:flex; align-items:center; justify-content:space-between;
+    padding: 16px 28px; max-width: 1120px; margin: 0 auto;
+  }
+  .logo{
+    display:flex; align-items:center; gap:10px;
+    font-family:'Fredoka', sans-serif; font-weight:700; font-size:1.25rem;
+    text-decoration:none;
+  }
+  .logo-badge{
+    width:38px; height:38px; border-radius: var(--radius-blob);
+    background: var(--coral);
+    display:flex; align-items:center; justify-content:center;
+    color:#fff; font-family:'Caveat',cursive; font-size:1.4rem; font-weight:700;
+    transform: rotate(-6deg);
+  }
+  .nav-links{ display:flex; gap: 28px; list-style:none; margin:0; padding:0; font-weight:600; font-size:.95rem; }
+  .nav-links a{ text-decoration:none; position:relative; padding-bottom:3px; }
+  .nav-links a::after{
+    content:""; position:absolute; left:0; bottom:0; width:0; height:3px;
+    background: var(--sun); border-radius: 2px; transition: width .25s ease;
+  }
+  .nav-links a:hover::after{ width:100%; }
+  .nav-cta{
+    font-weight:700; font-size:.9rem; text-decoration:none;
+    background: var(--ink); color: var(--paper); padding: 10px 18px;
+    border-radius: 999px; box-shadow: 3px 3px 0 var(--coral);
+    transition: transform .2s ease, box-shadow .2s ease;
+  }
+  .nav-cta:hover{ transform: translate(-2px,-2px); box-shadow: 5px 5px 0 var(--coral); }
+  .burger{ display:none; }
+  @media (max-width: 760px){
+    .nav-links{ display:none; }
+  }
+
+  /* ---------- hero ---------- */
+  .hero{ padding-top: 90px; padding-bottom: 60px; }
+  .hero-grid{ display:grid; grid-template-columns: 1.15fr .85fr; gap: 40px; align-items:center; }
+  @media (max-width: 860px){ .hero-grid{ grid-template-columns: 1fr; } }
+
+  .hero h1{ font-size: clamp(2.6rem, 6vw, 4.4rem); line-height: 1.04; }
+  .hero .accent{ color: var(--coral); position:relative; white-space:nowrap; }
+  .hero .accent svg{ position:absolute; left:-4%; bottom:-14px; width:108%; }
+
+  .hero p.lede{
+    margin-top: 22px; font-size: 1.15rem; line-height:1.65; max-width: 46ch; color: #4a4768;
+  }
+
+  .hero-ctas{ margin-top: 32px; display:flex; gap:16px; flex-wrap:wrap; }
+  .btn-primary{
+    display:inline-flex; align-items:center; gap:8px;
+    background: var(--ink); color:var(--paper); text-decoration:none;
+    padding: 14px 26px; border-radius: 999px; font-weight:700;
+    box-shadow: 4px 4px 0 var(--mint);
+    transition: transform .2s ease, box-shadow .2s ease;
+  }
+  .btn-primary:hover{ transform: translate(-3px,-3px); box-shadow: 7px 7px 0 var(--mint); }
+  .btn-ghost{
+    display:inline-flex; align-items:center; gap:8px;
+    text-decoration:none; padding: 14px 22px; border-radius: 999px;
+    border: 2px dashed var(--ink); font-weight:700; color: var(--ink);
+    transition: background .2s ease, transform .2s ease;
+  }
+  .btn-ghost:hover{ background: rgba(255,255,255,0.6); transform: translateY(-2px); }
+
+  .hero-art{ position:relative; height: 420px; }
+  .blob{
+    position:absolute; border-radius: var(--radius-blob);
+  }
+  .blob-1{ width:280px; height:280px; background: var(--grape); opacity:.85; top:10px; right:20px; animation: float1 7s ease-in-out infinite; }
+  .blob-2{ width:120px; height:120px; background: var(--sun); top:250px; right:220px; border-radius:50%; animation: float2 6s ease-in-out infinite; }
+  .sticker{
+    position:absolute; background: var(--paper); border: 2px solid var(--ink);
+    padding: 10px 14px; border-radius: 14px; box-shadow: 4px 4px 0 var(--ink);
+    font-family:'Caveat', cursive; font-weight:700; font-size:1.15rem;
+    animation: floaty 5s ease-in-out infinite;
+  }
+  .sticker-1{ top: 0; left: 0; transform: rotate(-8deg); }
+  .sticker-2{ bottom: 30px; left: 40px; transform: rotate(5deg); animation-delay: .8s; background: var(--mint); border-color: var(--ink); }
+  .sticker-3{ top: 190px; right: 0; transform: rotate(9deg); animation-delay: 1.6s; background: var(--coral); color:#fff; }
+
+  @keyframes float1{ 0%,100%{ transform: translateY(0) rotate(0deg);} 50%{ transform: translateY(-14px) rotate(4deg);} }
+  @keyframes float2{ 0%,100%{ transform: translateY(0);} 50%{ transform: translateY(12px);} }
+  @keyframes floaty{ 0%,100%{ transform: translateY(0) rotate(var(--r,0deg));} 50%{ transform: translateY(-10px) rotate(var(--r,0deg));} }
+
+  .scroll-cue{
+    display:flex; align-items:center; gap:10px; margin-top: 56px;
+    font-family:'Caveat', cursive; font-size:1.2rem; color:#6a6690;
+  }
+  .scroll-cue svg{ animation: bob 1.6s ease-in-out infinite; }
+  @keyframes bob{ 0%,100%{ transform: translateY(0);} 50%{ transform: translateY(6px);} }
+
+  /* ---------- section headers ---------- */
+  .sec-head{ margin-bottom: 48px; max-width: 640px; }
+  .sec-head h2{ font-size: clamp(2rem, 4vw, 2.8rem); margin-top:10px; }
+  .sec-head p{ color:#5a5678; font-size: 1.05rem; margin-top:14px; line-height:1.6; }
+
+  /* ---------- about ---------- */
+  .about-grid{ display:grid; grid-template-columns: .8fr 1.2fr; gap: 56px; align-items:center; }
+  @media (max-width: 800px){ .about-grid{ grid-template-columns: 1fr; } }
+  .photo-frame{
+    position:relative; width: 100%; aspect-ratio: 4/5; background: var(--paper-dark);
+    border: 3px solid var(--ink); border-radius: 18px 60px 18px 60px;
+    display:flex; align-items:center; justify-content:center;
+    box-shadow: 8px 8px 0 var(--sun);
+    transform: rotate(-2deg);
+    overflow:hidden;
+  }
+  .photo-frame span{ font-family:'Caveat',cursive; font-size:1.3rem; color:#8b87a8; text-align:center; padding: 0 20px; }
+  .photo-frame .tape{ top:-14px; left: calc(50% - 35px); transform: rotate(-4deg); }
+
+  .about-copy p{ font-size: 1.06rem; line-height:1.75; color:#3f3c5c; margin: 0 0 16px; }
+  .tag-cloud{ display:flex; flex-wrap:wrap; gap:10px; margin-top: 26px; }
+  .tag{
+    font-size:.88rem; font-weight:700; padding: 7px 14px; border-radius: 999px;
+    border: 2px solid var(--ink); background:#fff;
+  }
+  .tag:nth-child(3n+1){ background: var(--sun); }
+  .tag:nth-child(3n+2){ background: var(--mint); color:#fff; }
+  .tag:nth-child(3n+3){ background: var(--grape); color:#fff; }
+
+  /* ---------- work / project cards ---------- */
+  .work-grid{
+    display:grid; grid-template-columns: repeat(2, 1fr); gap: 34px;
+  }
+  @media (max-width: 720px){ .work-grid{ grid-template-columns: 1fr; } }
+
+  .project-card{
+    position:relative; background:#fff; border: 2px solid var(--ink);
+    border-radius: 16px; padding: 22px; box-shadow: 6px 6px 0 var(--ink);
+  }
+  .project-card:nth-child(1){ transform: rotate(-1.3deg); }
+  .project-card:nth-child(2){ transform: rotate(1.1deg); }
+  .project-card:nth-child(3){ transform: rotate(1.4deg); }
+  .project-card:nth-child(4){ transform: rotate(-1deg); }
+  .project-card .tape{ top:-14px; left: 34px; transform: rotate(-5deg); }
+
+  .project-thumb{
+    height: 190px; border-radius: 10px; margin-bottom: 18px;
+    display:flex; align-items:center; justify-content:center;
+    font-family:'Caveat', cursive; font-size:1.1rem; color: rgba(35,32,66,0.55);
+    border: 1.5px dashed rgba(35,32,66,0.3);
+  }
+  .thumb-1{ background: linear-gradient(135deg, #FFE1B0, #FFC857); }
+  .thumb-2{ background: linear-gradient(135deg, #C9F5EF, #3FBFB5); }
+  .thumb-3{ background: linear-gradient(135deg, #E3DBFF, #9C87F5); }
+  .thumb-4{ background: linear-gradient(135deg, #FFD3CC, #FF6B5D); }
+
+  .project-card h3{ font-size: 1.35rem; }
+  .project-meta{ font-family:'Caveat',cursive; font-weight:700; color: var(--coral); font-size:1.05rem; margin-top:4px; }
+  .project-card p{ color:#4a4768; font-size:.96rem; line-height:1.6; margin: 12px 0 16px; }
+  .project-link{
+    font-weight:700; font-size:.92rem; text-decoration:none; color:var(--ink);
+    display:inline-flex; align-items:center; gap:6px;
+    border-bottom: 2px solid var(--sun);
+  }
+
+  /* ---------- process (real sequence -> numbered ok) ---------- */
+  .process-path{ position:relative; }
+  .process-list{ display:grid; grid-template-columns: repeat(4,1fr); gap: 24px; counter-reset: step; list-style:none; padding:0; margin: 50px 0 0; }
+  @media (max-width: 900px){ .process-list{ grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 560px){ .process-list{ grid-template-columns: 1fr; } }
+  .process-list li{
+    position:relative; background:#fff; border:2px solid var(--ink); border-radius: 14px;
+    padding: 26px 18px 20px; text-align:left;
+  }
+  .process-list li::before{
+    counter-increment: step; content: counter(step);
+    position:absolute; top:-18px; left:-14px; width:38px; height:38px; border-radius:50%;
+    background: var(--ink); color: var(--paper); display:flex; align-items:center; justify-content:center;
+    font-family:'Fredoka',sans-serif; font-weight:700; box-shadow: 3px 3px 0 var(--sun);
+  }
+  .process-list h4{ font-family:'Fredoka',sans-serif; font-size:1.08rem; margin: 4px 0 8px; }
+  .process-list p{ font-size:.9rem; color:#5a5678; line-height:1.55; margin:0; }
+
+  /* ---------- tools ---------- */
+  .tool-cloud{ display:flex; flex-wrap:wrap; gap:14px; margin-top: 44px; }
+  .tool-pill{
+    display:flex; align-items:center; gap:8px; background:#fff; border:2px solid var(--ink);
+    padding: 10px 16px; border-radius: 999px; font-weight:700; font-size:.92rem;
+    box-shadow: 3px 3px 0 rgba(35,32,66,0.12);
+    transition: transform .2s ease;
+  }
+  .tool-pill:hover{ transform: translateY(-4px) rotate(-2deg); }
+  .tool-dot{ width:10px; height:10px; border-radius:50%; }
+
+  /* ---------- testimonial-ish quote ---------- */
+  .quote-block{
+    margin-top: 60px; padding: 34px 38px; background: var(--ink); color: var(--paper);
+    border-radius: 22px; position:relative;
+  }
+  .quote-block p{ font-family:'Caveat', cursive; font-size: 1.6rem; line-height:1.4; max-width: 60ch; }
+  .quote-block .who{ font-family:'Plus Jakarta Sans',sans-serif; font-size:.85rem; opacity:.75; margin-top:14px; font-weight:600; }
+
+  /* ---------- contact ---------- */
+  .contact-card{
+    background: #fff; border: 2px solid var(--ink); border-radius: 26px;
+    padding: 56px 44px; text-align:center; position:relative; overflow:hidden;
+    box-shadow: 8px 8px 0 var(--grape);
+  }
+  .contact-card h2{ font-size: clamp(2rem,5vw,3rem); }
+  .contact-card p{ color:#4a4768; max-width: 46ch; margin: 16px auto 30px; line-height:1.6; }
+  .stamp{
+    position:absolute; top:26px; right: 30px; width:78px; height:78px; border:3px dashed var(--coral);
+    border-radius: 10px; display:flex; align-items:center; justify-content:center; transform: rotate(8deg);
+    font-family:'Caveat',cursive; font-weight:700; color: var(--coral); font-size:.95rem; text-align:center;
+  }
+  @media (max-width:600px){ .stamp{ display:none; } }
+
+  footer{ text-align:center; padding: 40px 0; font-size:.85rem; color:#7a7695; }
+  footer .hand{ font-size:1.1rem; color: var(--ink); }
+
+  /* ---------- reveal on scroll ---------- */
+  .reveal{ opacity:0; transform: translateY(24px); transition: opacity .7s ease, transform .7s ease; }
+  .reveal.in{ opacity:1; transform: translateY(0); }
+</style>
+</head>
+<body>
+
+<header>
+  <nav class="nav">
+    <a href="#top" class="logo">
+      <span class="logo-badge">t</span>
+      Tirtha
+    </a>
+    <ul class="nav-links">
+      <li><a href="#work">Work</a></li>
+      <li><a href="#about">About</a></li>
+      <li><a href="#process">Process</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+    <a href="#contact" class="nav-cta">Say hello</a>
+  </nav>
+</header>
+
+<main id="top">
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="wrap hero-grid">
+      <div class="reveal in">
+        <span class="eyebrow">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l2.5 6.5L21 11l-6.5 2.5L12 20l-2.5-6.5L3 11l6.5-2.5L12 2z"/></svg>
+          Graphic & UI/UX Designer
+        </span>
+        <h1>Hi, I'm Tirtha —<br>I design things that make people go
+          <span class="accent">"oh, nice."
+            <svg viewBox="0 0 200 12" preserveAspectRatio="none"><path d="M2 8 C 40 2, 80 12, 120 6 S 180 2, 198 8" stroke="#FFC857" stroke-width="5" fill="none" stroke-linecap="round"/></svg>
+          </span>
+        </h1>
+        <p class="lede">I sketch, prototype, and pixel-push my way from a messy napkin idea to an interface people actually enjoy using. Brands, apps, zines — if it needs a personality, I'm probably already doodling it.</p>
+        <div class="hero-ctas">
+          <a href="#work" class="btn-primary">
+            See the work
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </a>
+          <a href="#contact" class="btn-ghost">Let's collaborate</a>
+        </div>
+        <div class="scroll-cue">
+          keep scrolling, it gets better
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+        </div>
+      </div>
+
+      <div class="hero-art reveal in" style="transition-delay:.1s">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+        <div class="sticker sticker-1" style="--r:-8deg">Figma addict</div>
+        <div class="sticker sticker-2" style="--r:5deg">coffee-fueled ☕</div>
+        <div class="sticker sticker-3" style="--r:9deg">pixel perfectionist</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section id="about">
+    <div class="wrap about-grid">
+      <div class="reveal">
+        <div class="photo-frame">
+          <div class="tape"></div>
+          <span>[ your photo goes here — square-ish crop works best with this frame ]</span>
+        </div>
+      </div>
+      <div class="about-copy reveal" style="transition-delay:.1s">
+        <span class="eyebrow">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.5-7 8-7s8 3 8 7"/></svg>
+          A little about me
+        </span>
+        <h2 style="margin-top:12px; font-size: clamp(1.8rem,3.6vw,2.4rem);">Part strategist, part sticker-hoarder.</h2>
+        <p>Swap in your real story here — where you studied, how you landed in design, and the kind of problems you like solving. Two short paragraphs is plenty; people skim, so make every sentence earn its spot.</p>
+        <p>Outside of client work I like [your hobby], collect [your weird little obsession], and I'm always down to talk about type pairings for way too long.</p>
+        <div class="tag-cloud">
+          <span class="tag">Brand identity</span>
+          <span class="tag">UI/UX design</span>
+          <span class="tag">Illustration</span>
+          <span class="tag">Prototyping</span>
+          <span class="tag">Design systems</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- WORK -->
+  <section id="work">
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <span class="eyebrow">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M3 9h18M9 21V9"/></svg>
+          Selected work
+        </span>
+        <h2>Projects I'm proud to talk about</h2>
+        <p>Four placeholders below — swap each thumbnail, title, and blurb for your real case studies and link them to live sites or PDF write-ups.</p>
+      </div>
+
+      <div class="work-grid">
+        <div class="project-card card-tilt reveal">
+          <div class="tape"></div>
+          <div class="project-thumb thumb-1">[ project thumbnail ]</div>
+          <h3>Bloom Café Rebrand</h3>
+          <div class="project-meta">Brand identity · 2025</div>
+          <p>A full identity refresh for a neighbourhood café — logo, packaging, and a menu system that actually gets read.</p>
+          <a href="#" class="project-link">View case study →</a>
+        </div>
+
+        <div class="project-card card-tilt reveal" style="transition-delay:.05s">
+          <div class="tape"></div>
+          <div class="project-thumb thumb-2">[ project thumbnail ]</div>
+          <h3>Nimbus — Weather App</h3>
+          <div class="project-meta">UI/UX design · 2025</div>
+          <p>A weather app redesign focused on glanceability: the forecast you need in under two seconds.</p>
+          <a href="#" class="project-link">View case study →</a>
+        </div>
+
+        <div class="project-card card-tilt reveal" style="transition-delay:.1s">
+          <div class="tape"></div>
+          <div class="project-thumb thumb-3">[ project thumbnail ]</div>
+          <h3>Wildflower Zine</h3>
+          <div class="project-meta">Editorial & illustration · 2024</div>
+          <p>A self-published zine exploring [your theme], hand-illustrated cover to cover.</p>
+          <a href="#" class="project-link">View case study →</a>
+        </div>
+
+        <div class="project-card card-tilt reveal" style="transition-delay:.15s">
+          <div class="tape"></div>
+          <div class="project-thumb thumb-4">[ project thumbnail ]</div>
+          <h3>Fernway — Design System</h3>
+          <div class="project-meta">Design systems · 2024</div>
+          <p>Component library and design tokens built to keep a growing product team shipping in one voice.</p>
+          <a href="#" class="project-link">View case study →</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROCESS -->
+  <section id="process" class="process-path">
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <span class="eyebrow">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
+          How a project unfolds
+        </span>
+        <h2>From napkin sketch to shipped screen</h2>
+        <p>The order actually matters here — each stage feeds the next.</p>
+      </div>
+      <ol class="process-list">
+        <li class="reveal"><h4>Dig in</h4><p>Interviews, research, and a lot of "why" questions before a single pixel gets placed.</p></li>
+        <li class="reveal" style="transition-delay:.05s"><h4>Sketch wild</h4><p>Fast, messy exploration on paper — quantity over polish, on purpose.</p></li>
+        <li class="reveal" style="transition-delay:.1s"><h4>Build the system</h4><p>Wireframes and components tighten into a coherent, reusable UI kit.</p></li>
+        <li class="reveal" style="transition-delay:.15s"><h4>Polish & ship</h4><p>Micro-interactions, QA, handoff — the last 10% that makes it feel finished.</p></li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- TOOLS -->
+  <section id="tools">
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <span class="eyebrow">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.4-3.4a4 4 0 01-5.4 5.4L6.5 20.5a2.1 2.1 0 01-3-3L12.7 8.3a4 4 0 015.4-5.4l-3.3 3.3z"/></svg>
+          Toolkit
+        </span>
+        <h2>What's in the kit</h2>
+      </div>
+      <div class="tool-cloud reveal">
+        <span class="tool-pill"><span class="tool-dot" style="background:var(--coral)"></span>Figma</span>
+        <span class="tool-pill"><span class="tool-dot" style="background:var(--mint)"></span>Adobe Illustrator</span>
+        <span class="tool-pill"><span class="tool-dot" style="background:var(--sun)"></span>Photoshop</span>
+        <span class="tool-pill"><span class="tool-dot" style="background:var(--grape)"></span>After Effects</span>
+        <span class="tool-pill"><span class="tool-dot" style="background:var(--coral)"></span>Procreate</span>
+        <span class="tool-pill"><span class="tool-dot" style="background:var(--mint)"></span>Webflow</span>
+        <span class="tool-pill"><span class="tool-dot" style="background:var(--sun)"></span>Notion</span>
+      </div>
+
+      <div class="quote-block reveal">
+        <p>"Working with Tirtha felt less like a client relationship and more like handing an idea to someone who genuinely wanted to make it better."</p>
+        <div class="who">— swap in a real client / collaborator quote</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact">
+    <div class="wrap">
+      <div class="contact-card reveal">
+        <div class="stamp">mail<br>me!</div>
+        <span class="eyebrow">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16v16H4z"/><path d="M4 6l8 7 8-7"/></svg>
+          Got a project in mind?
+        </span>
+        <h2 style="margin-top:12px;">Let's make something worth pinning to the wall.</h2>
+        <p>I'm currently open for freelance work and new collaborations. Drop a note — I read every one, and I promise to reply with at least one exclamation mark.</p>
+        <a href="mailto:hello@yourname.com" class="btn-primary">
+          hello@yourname.com
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <p>Designed with <span class="hand">too much coffee</span> by Tirtha, 2026.</p>
+</footer>
+
+<script>
+  const io = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
+  }, { threshold: 0.12 });
+  document.querySelectorAll('.reveal').forEach(el=> io.observe(el));
+</script>
+
+</body>
+</html>
