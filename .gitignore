@@ -1,2 +1,15 @@
 /.directory
 /.vscode
+
+# Ignore everything by default
+*
+
+# Allow traversal into directories
+!*/
+
+# Allow specific file types
+!*.cpp
+!*.md
+
+# Make sure this file itself isn't ignored
+!.gitignore
